@@ -1,6 +1,8 @@
 const Alexa = require('ask-sdk');
 const client = require('cheerio-httpcli');
-const url = 'https://qiita.com/';
+const npmRequest = require('request');
+const qiitaUrl = 'https://qiita.com/';
+const slackUrl = "https://hooks.slack.com/services/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";
 
 // constants
 const SKILL_NAME = 'おすすめ技術記事';
@@ -17,7 +19,7 @@ const initialHandler = {
   },
   handle(handlerInput) {
     const speechOutput = INITIAL_MESSAGE;
-    client.fetch(url)
+    client.fetch(qiitaUrl)
       .then(function (result) {
         const $ = result.$;
         const data = $('.allWrapper .p-home_main div').attr('data-hyperapp-props');
@@ -58,6 +60,23 @@ const getQiitaDocumentTitleHandler = {
       qiitaDocuments[8] + '、' +
       qiitaDocuments[9] +
       'です。';
+    qiitaDocuments.map(q => {
+      npmRequest.post({
+        url: slackUrl,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        json: {
+          "text": q,
+        },
+      }, function (error, res, body) {
+        if (!error && res.statusCode === 200) {
+          console.log(body);
+        } else {
+          console.log('error');
+        }
+      });
+    })
     return handlerInput.responseBuilder
       .speak(speechOutput)
       .getResponse();
