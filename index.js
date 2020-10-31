@@ -2,7 +2,7 @@ const Alexa = require('ask-sdk');
 const client = require('cheerio-httpcli');
 const npmRequest = require('request');
 const qiitaUrl = 'https://qiita.com/';
-const slackUrl = "https://hooks.slack.com/services/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";
+const slackUrl = "";
 
 // constants
 const SKILL_NAME = 'おすすめ技術記事';
